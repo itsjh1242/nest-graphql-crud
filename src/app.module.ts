@@ -1,20 +1,23 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { join } from 'path';
 
 import { MoviesModule } from './movies/movies.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { RModule } from './s/r/r.module';
+import { LocationModule } from './location/location.module';
 
 @Module({
   imports: [
     MoviesModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      autoSchemaFile: true,
       playground: true, // GraphQL Playground 활성화
     }),
+    RModule,
+    LocationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
