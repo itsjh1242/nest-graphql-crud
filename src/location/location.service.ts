@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { GetAllLocationOutput } from './dtos/get-all-location.dto';
 import { GetLocationInput, GetLocationOutput } from './dtos/get-location.dto';
+import {
+  CreateLocationInput,
+  CreateLocationOutput,
+} from './dtos/create-location.dto';
 
 const locations = [
   {
@@ -37,6 +41,30 @@ export class LocationService {
     } catch (e) {
       console.log(e);
       return { ok: false, error: 'Failed to get location' };
+    }
+  }
+
+  async createLocation(
+    createLocationInput: CreateLocationInput,
+  ): Promise<CreateLocationOutput> {
+    try {
+      // Find last place number
+      const lastPlaceNumber = locations.reduce(
+        (max, loc) => Math.max(max, loc.placeNumber),
+        0,
+      );
+      // Create the new location with the next place number
+      const newLocation = {
+        placeName: createLocationInput.placeName,
+        placeNumber: lastPlaceNumber + 1,
+        placeVisitorCount: createLocationInput.placeVisitorCount,
+      };
+
+      locations.push(newLocation);
+
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: e.message };
     }
   }
 }
