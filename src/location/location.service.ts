@@ -5,6 +5,14 @@ import {
   CreateLocationInput,
   CreateLocationOutput,
 } from './dtos/create-location.dto';
+import {
+  DeleteLocationInput,
+  DeleteLocationOutput,
+} from './dtos/delete-location.dto';
+import {
+  UpdateLocationVisitorCountInput,
+  UpdateLocationVisitorCountOutput,
+} from './dtos/update-location-visitor-count.dto';
 
 const locations = [
   {
@@ -64,6 +72,63 @@ export class LocationService {
 
       return { ok: true };
     } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  }
+
+  async deleteLocation({
+    placeNumber,
+  }: DeleteLocationInput): Promise<DeleteLocationOutput> {
+    try {
+      const index = locations.findIndex(
+        (location) => location.placeNumber === placeNumber,
+      );
+
+      if (index === -1) {
+        return {
+          ok: false,
+          error: 'Location not found',
+        };
+      }
+
+      locations.splice(index, 1);
+
+      return {
+        ok: true,
+      };
+    } catch (e) {
+      console.error(e);
+      return { ok: false, error: e.message };
+    }
+  }
+
+  async updateLocationVisitorCount({
+    placeNumber,
+    value,
+  }: UpdateLocationVisitorCountInput): Promise<UpdateLocationVisitorCountOutput> {
+    try {
+      const index = locations.findIndex(
+        (location) => location.placeNumber === placeNumber,
+      );
+
+      if (index === -1) {
+        return { ok: false, error: 'Location not found' };
+      }
+
+      // Validation
+      const visitorCount = locations[index].placeVisitorCount;
+      if (visitorCount + value < 0) {
+        return {
+          ok: false,
+          error: 'Location visitor count must be at least 0',
+        };
+      }
+      // Update the visitor count
+      locations[index].placeVisitorCount += value;
+
+      return { ok: true };
+    } catch (e) {
+      console.error(e);
       return { ok: false, error: e.message };
     }
   }
