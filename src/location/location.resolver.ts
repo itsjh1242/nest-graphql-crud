@@ -6,6 +6,14 @@ import {
   CreateLocationInput,
   CreateLocationOutput,
 } from './dtos/create-location.dto';
+import {
+  DeleteLocationInput,
+  DeleteLocationOutput,
+} from './dtos/delete-location.dto';
+import {
+  UpdateLocationVisitorCountInput,
+  UpdateLocationVisitorCountOutput,
+} from './dtos/update-location-visitor-count.dto';
 
 @Resolver()
 export class LocationResolver {
@@ -25,17 +33,22 @@ export class LocationResolver {
 
   @Mutation(() => CreateLocationOutput)
   async createLocation(
-    @Args('input') createLocationInput: CreateLocationInput,
+    @Args('input') input: CreateLocationInput,
   ): Promise<CreateLocationOutput> {
-    return this.locationService.createLocation(createLocationInput);
+    return this.locationService.createLocation(input);
+  }
+
+  @Mutation(() => DeleteLocationOutput)
+  async deleteLocation(
+    @Args('input') input: DeleteLocationInput,
+  ): Promise<DeleteLocationOutput> {
+    return this.locationService.deleteLocation(input);
+  }
+
+  @Mutation(() => UpdateLocationVisitorCountOutput)
+  async updateLocationVisitorCount(
+    @Args('input') input: UpdateLocationVisitorCountInput,
+  ): Promise<UpdateLocationVisitorCountOutput> {
+    return this.locationService.updateLocationVisitorCount(input);
   }
 }
-
-// @Mutation(returns => CreateBookingOutput)
-//     @Role(['Any'])
-//     async createBooking(
-//       @AuthUser() authUser: User,
-//       @Args('input') createBookingInput: CreateBookingInput,
-//     ): Promise<CreateBookingOutput> {
-//       return this.bookingService.createBooking(authUser.id, createBookingInput);
-//     }
